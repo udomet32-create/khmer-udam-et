@@ -14,6 +14,7 @@ const productInput = z.object({
   priceCents: z.number().int().nonnegative(),
   oldPriceCents: z.number().int().nonnegative().optional().nullable(),
   imageUrl: z.string().max(2000).optional().nullable(),
+  imageUrls: z.string().max(25000).optional().nullable(),
   videoUrl: z.string().max(2000).optional().nullable(),
   badge: z.string().max(40).optional().nullable(),
   isActive: z.boolean().default(true),

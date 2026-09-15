@@ -21,6 +21,7 @@ export const products = mysqlTable("products", {
   priceCents: int("priceCents").notNull(),
   oldPriceCents: int("oldPriceCents"),
   imageUrl: text("imageUrl"),
+  imageUrls: text("imageUrls"),
   videoUrl: text("videoUrl"),
   badge: varchar("badge", { length: 40 }),
   isActive: boolean("isActive").default(true).notNull(),
