@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { Facebook, Heart, Instagram, MapPin, Menu, MessageCircle, Minus, Phone, Plus, Search, Send, Share2, ShoppingBag, X } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
-type Product = { id: number; name: string; khmerName: string; category: string; price: number; oldPrice?: number; badge?: string; tone: string; imagePosition?: string };
+type Product = { id: number; name: string; khmerName: string; category: string; price: number; oldPrice?: number; badge?: string; tone: string; imagePosition?: string; imageUrl?: string; videoUrl?: string };
 const products: Product[] = [
   { id: 1, name: "Landea Signature Bag", khmerName: "កាបូបដៃ Landea ស្អាតប្រណិត", category: "កាបូប", price: 29.9, oldPrice: 39.9, badge: "លក់ដាច់", tone: "bag", imagePosition: "38% 58%" },
   { id: 2, name: "Korean Pink Care Set", khmerName: "ឈុតថែរក្សាស្បែក Pink Care", category: "សម្រស់", price: 18.5, oldPrice: 24.9, badge: "-25%", tone: "beauty", imagePosition: "13% 58%" },
@@ -16,7 +17,7 @@ const poster = "/manus-storage/khmer-udam-poster_b68ee22f.png";
 const price = (value: number) => `$${value.toFixed(2)}`;
 
 function ProductVisual({ product }: { product: Product }) {
-  return <div className={`product-visual ${product.tone}`}><img src={hero} alt={product.khmerName} style={{ objectPosition: product.imagePosition }} /><div className="visual-shade" /><span className="visual-tag">KU</span></div>;
+  return <div className={`product-visual ${product.tone}`}><img src={product.imageUrl || hero} alt={product.khmerName} style={{ objectPosition: product.imagePosition }} /><div className="visual-shade" /><span className="visual-tag">KU</span></div>;
 }
 
 export default function Home() {
@@ -26,8 +27,10 @@ export default function Home() {
   const [favorites, setFavorites] = useState<number[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const filtered = useMemo(() => products.filter((p) => (category === "ទាំងអស់" || p.category === category) && `${p.name} ${p.khmerName}`.toLowerCase().includes(search.toLowerCase())), [category, search]);
-  const cartProducts = products.filter((p) => cart.includes(p.id));
+  const liveProducts = trpc.products.list.useQuery(undefined, { retry: false });
+  const catalog = useMemo<Product[]>(() => liveProducts.data?.length ? liveProducts.data.map((product) => ({ id: product.id, name: product.name, khmerName: product.name, category: product.category, price: product.priceCents / 100, oldPrice: product.oldPriceCents ? product.oldPriceCents / 100 : undefined, badge: product.badge ?? undefined, tone: "database-product", imageUrl: product.imageUrl ?? undefined, videoUrl: product.videoUrl ?? undefined })) : products, [liveProducts.data]);
+  const filtered = useMemo(() => catalog.filter((p) => (category === "ទាំងអស់" || p.category === category) && `${p.name} ${p.khmerName}`.toLowerCase().includes(search.toLowerCase())), [catalog, category, search]);
+  const cartProducts = catalog.filter((p) => cart.includes(p.id));
   const total = cartProducts.reduce((sum, p) => sum + p.price, 0);
   const toggleCart = (id: number) => setCart((items) => items.includes(id) ? items.filter((x) => x !== id) : [...items, id]);
   const toggleFavorite = (id: number) => setFavorites((items) => items.includes(id) ? items.filter((x) => x !== id) : [...items, id]);
