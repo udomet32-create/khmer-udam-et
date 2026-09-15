@@ -3,7 +3,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, publicProcedure, router } from "./_core/trpc";
-import { createProduct, deleteProduct, listProducts, updateProduct } from "./db";
+import { createProduct, deleteProduct, getProductById, listProducts, updateProduct } from "./db";
 import { storagePut } from "./storage";
 
 const productInput = z.object({
@@ -32,6 +32,7 @@ export const appRouter = router({
   }),
   products: router({
     list: publicProcedure.query(() => listProducts(false)),
+    getById: publicProcedure.input(z.object({ id: z.number().int().positive() })).query(({ input }) => getProductById(input.id)),
   }),
   adminProducts: router({
     list: adminProcedure.query(() => listProducts(true)),

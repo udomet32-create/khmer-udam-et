@@ -43,6 +43,13 @@ export async function listProducts(includeInactive = false) {
   return includeInactive ? rows : rows.filter((product) => product.isActive);
 }
 
+export async function getProductById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db.select().from(products).where(eq(products.id, id)).limit(1);
+  return rows[0];
+}
+
 export async function createProduct(input: InsertProduct) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");

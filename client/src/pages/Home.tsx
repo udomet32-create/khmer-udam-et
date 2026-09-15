@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Facebook, Heart, Instagram, MapPin, Menu, MessageCircle, Minus, Phone, Plus, Search, Send, Share2, ShoppingBag, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowRight, Facebook, Heart, Instagram, MapPin, Menu, MessageCircle, Minus, Phone, Plus, Search, Send, Share2, ShoppingBag, X } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
 type Product = { id: number; name: string; khmerName: string; category: string; price: number; oldPrice?: number; badge?: string; tone: string; imagePosition?: string; imageUrl?: string; videoUrl?: string };
@@ -12,6 +12,7 @@ const products: Product[] = [
   { id: 6, name: "Glow Essentials", khmerName: "ឈុត Glow Essentials", category: "សម្រស់", price: 16.8, tone: "glow", imagePosition: "8% 60%" },
 ];
 const categories = ["ទាំងអស់", "កាបូប", "សម្រស់", "ស្បែកជើង", "គ្រឿងបន្លាស់"];
+const provinces = ["ភ្នំពេញ", "កណ្តាល", "សៀមរាប", "បាត់ដំបង", "ព្រះសីហនុ", "កំពង់ចាម", "ខេត្តផ្សេងៗ"];
 const hero = "/manus-storage/khmer-udam-reference_7cd38c7a.png";
 const poster = "/manus-storage/khmer-udam-poster_b68ee22f.png";
 const price = (value: number) => `$${value.toFixed(2)}`;
@@ -23,15 +24,24 @@ function ProductVisual({ product }: { product: Product }) {
 export default function Home() {
   const [category, setCategory] = useState("ទាំងអស់");
   const [search, setSearch] = useState("");
-  const [cart, setCart] = useState<number[]>([]);
+  const [cart, setCart] = useState<number[]>(() => {
+    try { return JSON.parse(localStorage.getItem("khmer-udam-cart") || "[]"); } catch { return []; }
+  });
   const [favorites, setFavorites] = useState<number[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [checkout, setCheckout] = useState({ name: "", phone: "", address: "", province: "ភ្នំពេញ" });
+  const [checkoutError, setCheckoutError] = useState("");
   const liveProducts = trpc.products.list.useQuery(undefined, { retry: false });
   const catalog = useMemo<Product[]>(() => liveProducts.data?.length ? liveProducts.data.map((product) => ({ id: product.id, name: product.name, khmerName: product.name, category: product.category, price: product.priceCents / 100, oldPrice: product.oldPriceCents ? product.oldPriceCents / 100 : undefined, badge: product.badge ?? undefined, tone: "database-product", imageUrl: product.imageUrl ?? undefined, videoUrl: product.videoUrl ?? undefined })) : products, [liveProducts.data]);
   const filtered = useMemo(() => catalog.filter((p) => (category === "ទាំងអស់" || p.category === category) && `${p.name} ${p.khmerName}`.toLowerCase().includes(search.toLowerCase())), [catalog, category, search]);
   const cartProducts = catalog.filter((p) => cart.includes(p.id));
   const total = cartProducts.reduce((sum, p) => sum + p.price, 0);
+  const cartMessage = [`ការបញ្ជាទិញ Khmer Udam ET`, ...cartProducts.map((p) => `${p.khmerName} · ${price(p.price)}`), `សរុប: ${price(total + 2)}`, `ឈ្មោះ: ${checkout.name}`, `លេខទូរសព្ទ: ${checkout.phone}`, `ខេត្ត/ក្រុង: ${checkout.province}`, `អាសយដ្ឋាន: ${checkout.address}`].join("\n");
+  const cartTelegramHref = `https://t.me/share/url?url=https://khmerudamet.com&text=${encodeURIComponent(cartMessage)}`;
+  useEffect(() => { localStorage.setItem("khmer-udam-cart", JSON.stringify(cart)); }, [cart]);
+  useEffect(() => { if (new URLSearchParams(window.location.search).get("cart") === "1") setCartOpen(true); }, []);
   const toggleCart = (id: number) => setCart((items) => items.includes(id) ? items.filter((x) => x !== id) : [...items, id]);
   const toggleFavorite = (id: number) => setFavorites((items) => items.includes(id) ? items.filter((x) => x !== id) : [...items, id]);
 
@@ -52,6 +62,6 @@ export default function Home() {
     <footer id="contact" className="site-footer"><div><a className="brand footer-brand" href="#top"><span className="brand-mark">K</span><span className="brand-name"><strong>KHMER UDAM</strong><em>ET</em></span></a><p>របស់ស្អាតៗ សម្រាប់ជីវិតដែលមានស្ទាយ។</p></div><div className="footer-links"><a href="#collection">ទំនិញ</a><a href="#share">ចែករំលែក</a><a href="mailto:hello@khmerudamet.com">អ៊ីមែល</a></div><div className="social-links"><a href="https://facebook.com" target="_blank" rel="noreferrer"><Facebook size={17} /></a><a href="https://instagram.com" target="_blank" rel="noreferrer"><Instagram size={17} /></a><a href="https://t.me/" target="_blank" rel="noreferrer"><Send size={17} /></a></div><div className="footer-bottom"><span>© 2026 Khmer Udam ET</span><span>Designed with care in Cambodia</span></div></footer>
     <a className="floating-telegram" href="https://t.me/" target="_blank" rel="noreferrer"><Send size={19} /><span>Chat Telegram</span></a>
 
-    {cartOpen && <div className="drawer-backdrop" onClick={() => setCartOpen(false)}><aside className="cart-drawer reference-cart-drawer" onClick={(e) => e.stopPropagation()}><div className="drawer-header"><div><p className="section-kicker">YOUR EDIT</p><h2>កន្ត្រករបស់អ្នក <span>{cart.length} items</span></h2></div><button className="close-button" onClick={() => setCartOpen(false)}><X size={25} /></button></div>{cartProducts.length === 0 ? <div className="cart-empty"><ShoppingBag size={32} /><h3>កន្ត្រកនៅទទេ</h3><p>បន្ថែមទំនិញដែលអ្នកចូលចិត្ត ដើម្បីចាប់ផ្តើម order។</p></div> : <><div className="cart-items reference-cart-items">{cartProducts.map((p) => <div className="cart-item reference-cart-item" key={p.id}><div className="mini-product"><ProductVisual product={p} /></div><div className="cart-item-copy"><p>{p.category}</p><h3>{p.khmerName}</h3><small>តពាក់ 1 · ONE SIZE</small><strong>{price(p.price)}</strong><div className="cart-quantity"><button onClick={() => toggleCart(p.id)}><Minus size={16} /></button><span>1</span><button onClick={() => toggleCart(p.id)}><Plus size={16} /></button><button className="remove-item" onClick={() => toggleCart(p.id)}><X size={17} /></button></div></div></div>)}</div><div className="reference-cart-total"><p>សរុបរងរបស់ទំនិញ</p><p>ការដឹកជញ្ជូន និងថ្លៃសេវានឹងបង្ហាញពេល chat</p><strong>{price(total + 2.0)}</strong></div><a className="reference-checkout" href="https://t.me/" target="_blank" rel="noreferrer">បញ្ជាទិញឥឡូវនេះ <span>→</span></a></>}</aside></div>}
+    {cartOpen && <div className="drawer-backdrop" onClick={() => setCartOpen(false)}><aside className="cart-drawer reference-cart-drawer" onClick={(e) => e.stopPropagation()}><div className="drawer-header"><div><p className="section-kicker">YOUR EDIT</p><h2>កន្ត្រករបស់អ្នក <span>{cart.length} items</span></h2></div><button className="close-button" onClick={() => setCartOpen(false)}><X size={25} /></button></div>{cartProducts.length === 0 ? <div className="cart-empty"><ShoppingBag size={32} /><h3>កន្ត្រកនៅទទេ</h3><p>បន្ថែមទំនិញដែលអ្នកចូលចិត្ត ដើម្បីចាប់ផ្តើម order។</p></div> : <><div className="cart-items reference-cart-items">{cartProducts.map((p) => <div className="cart-item reference-cart-item" key={p.id}><div className="mini-product"><ProductVisual product={p} /></div><div className="cart-item-copy"><p>{p.category}</p><h3>{p.khmerName}</h3><small>តពាក់ 1 · ONE SIZE</small><strong>{price(p.price)}</strong><div className="cart-quantity"><button onClick={() => toggleCart(p.id)}><Minus size={16} /></button><span>1</span><button onClick={() => toggleCart(p.id)}><Plus size={16} /></button><button className="remove-item" onClick={() => toggleCart(p.id)}><X size={17} /></button></div></div></div>)}</div><div className="reference-cart-total"><p>សរុបរងរបស់ទំនិញ</p><p>ការដឹកជញ្ជូន និងថ្លៃសេវានឹងបង្ហាញពេល chat</p><strong>{price(total + 2.0)}</strong></div>{!checkoutOpen ? <button className="reference-checkout" onClick={() => { setCheckoutOpen(true); setCheckoutError(""); }}>បញ្ជាទិញឥឡូវនេះ <span>→</span></button> : <div className="cart-checkout-form"><h3>ព័ត៌មានការដឹកជញ្ជូន</h3><label><span>ឈ្មោះអ្នកទទួល *</span><input value={checkout.name} onChange={(e) => setCheckout({ ...checkout, name: e.target.value })} placeholder="ឈ្មោះពេញ" /></label><label><span>លេខទូរសព្ទ *</span><input value={checkout.phone} onChange={(e) => setCheckout({ ...checkout, phone: e.target.value })} inputMode="tel" placeholder="012 345 678" /></label><label><span>ខេត្ត/ក្រុង *</span><select value={checkout.province} onChange={(e) => setCheckout({ ...checkout, province: e.target.value })}>{provinces.map((item) => <option key={item}>{item}</option>)}</select></label><label><span>អាសយដ្ឋានលម្អិត *</span><textarea rows={3} value={checkout.address} onChange={(e) => setCheckout({ ...checkout, address: e.target.value })} placeholder="ផ្ទះលេខ, ផ្លូវ, សង្កាត់/ឃុំ..." /></label>{checkoutError && <p className="checkout-error">{checkoutError}</p>}<a className="reference-checkout" href={checkout.name && checkout.phone && checkout.address ? cartTelegramHref : undefined} target="_blank" rel="noreferrer" onClick={(e) => { if (!checkout.name.trim() || !/^0[1-9][0-9]{7,9}$/.test(checkout.phone.replace(/[\s-]/g, "")) || !checkout.address.trim()) { e.preventDefault(); setCheckoutError("សូមបំពេញឈ្មោះ លេខទូរសព្ទ និងអាសយដ្ឋានឱ្យបានត្រឹមត្រូវ។"); } }}>{"បន្តទៅ Telegram"} <ArrowRight size={18} /></a></div>}</>}</aside></div>}
   </div>;
 }
