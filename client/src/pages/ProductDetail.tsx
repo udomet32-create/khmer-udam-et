@@ -57,6 +57,7 @@ export default function ProductDetail() {
     setMedia("video");
     window.setTimeout(() => {
       if (videoRef.current) { videoRef.current.muted = true; void videoRef.current.play().catch(() => undefined); }
+      if (mediaRef.current && !document.fullscreenElement) void mediaRef.current.requestFullscreen().catch(() => undefined);
     }, 0);
   };
   const toggleFullscreen = async () => {
