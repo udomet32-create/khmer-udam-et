@@ -16,6 +16,8 @@ const productInput = z.object({
   imageUrl: z.string().max(2000).optional().nullable(),
   imageUrls: z.string().max(25000).optional().nullable(),
   videoUrl: z.string().max(2000).optional().nullable(),
+  colorOptions: z.string().max(5000).optional().nullable(),
+  sizeOptions: z.string().max(5000).optional().nullable(),
   badge: z.string().max(40).optional().nullable(),
   isActive: z.boolean().default(true),
   sortOrder: z.number().int().default(0),

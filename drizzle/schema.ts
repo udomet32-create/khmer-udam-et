@@ -23,6 +23,8 @@ export const products = mysqlTable("products", {
   imageUrl: text("imageUrl"),
   imageUrls: text("imageUrls"),
   videoUrl: text("videoUrl"),
+  colorOptions: text("colorOptions"),
+  sizeOptions: text("sizeOptions"),
   badge: varchar("badge", { length: 40 }),
   isActive: boolean("isActive").default(true).notNull(),
   sortOrder: int("sortOrder").default(0).notNull(),
