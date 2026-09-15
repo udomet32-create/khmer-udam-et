@@ -33,7 +33,7 @@ type AdminProduct = {
 };
 
 const emptyForm: ProductForm = { name: "", code: "", category: "កាបូប", description: "", price: "", oldPrice: "", badge: "", imageUrl: "", videoUrl: "", sortOrder: "0", isActive: true };
-const categories = ["កាបូប", "សម្រស់", "ស្បែកជើង", "គ្រឿងបន្លាស់", "ផ្សេងៗ"];
+const categories = ["កាបូប", "ស្បែកជើង", "ខ្សែក្រវ៉ាត់", "ម៉េកអាប់"];
 
 function toForm(product: AdminProduct): ProductForm {
   return { name: product.name, code: product.code, category: product.category, description: product.description ?? "", price: (product.priceCents / 100).toFixed(2), oldPrice: product.oldPriceCents ? (product.oldPriceCents / 100).toFixed(2) : "", badge: product.badge ?? "", imageUrl: product.imageUrl ?? "", videoUrl: product.videoUrl ?? "", sortOrder: String(product.sortOrder), isActive: product.isActive };

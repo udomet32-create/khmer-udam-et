@@ -8,6 +8,6 @@ describe("Khmer Udam ET storefront utilities", () => {
   });
 
   it("keeps the customer-facing category order stable", () => {
-    expect(storefrontCategories).toEqual(["ទាំងអស់", "កាបូប", "សម្រស់", "ស្បែកជើង", "គ្រឿងបន្លាស់"]);
+    expect(storefrontCategories).toEqual(["ទាំងអស់", "កាបូប", "ស្បែកជើង", "ខ្សែក្រវ៉ាត់", "ម៉េកអាប់"]);
   });
 });
