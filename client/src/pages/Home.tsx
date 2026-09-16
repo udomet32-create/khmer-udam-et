@@ -63,7 +63,7 @@ export default function Home() {
   const cartMessage = [`ការបញ្ជាទិញ Khmer Udam ET`, `ផលិតផលដែលបានជ្រើសរើស (${cartProducts.length} មុខ):`, ...cartProducts.map((p, index) => `${index + 1}. ${p.khmerName} · ${price(p.price)}`), `សរុបប្រហែល: ${price(total + 2)}`, `ឈ្មោះ: ${checkout.name}`, `លេខទូរសព្ទ: ${checkout.phone}`, `រាជធានី/ខេត្ត: ${checkout.province}`, `ស្រុក/ខណ្ឌ: ${checkout.district}`, `អាសយដ្ឋាន: ${checkout.address}`].join("\n");
   const cartTelegramHref = `https://t.me/oudom_online_shop?text=${encodeURIComponent(cartMessage)}`;
   const shareUrl = typeof window === "undefined" ? "https://khmerudamet.com/" : window.location.href;
-  const shareText = "សូមមើលផលិតផលស្អាតៗពី Khmer Udam ET 🛍️";
+  const shareText = "Khmer Udam ET — របស់ស្អាតៗ សម្រាប់អ្នក។ ចូលមើលផលិតផល និងបញ្ជាទិញបានងាយស្រួល។";
   const facebookShareHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
   const telegramShareHref = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
   const whatsappShareHref = `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`;
