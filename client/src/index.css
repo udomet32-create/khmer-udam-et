@@ -213,3 +213,16 @@ button { border: 0; cursor: pointer; }
   .premium-connect-panel { margin-top: 4px; padding: 6px; }.premium-contact-grid { gap: 3px; }.premium-contact-item { min-height: 31px; font-size: 6.5px; }.premium-contact-item svg { width: 12px; height: 12px; }
   .premium-share-heading { margin: 6px 1px 3px; font-size: 8px; }.premium-share-buttons { gap: 3px !important; }.premium-share-buttons a, .premium-share-buttons button { min-height: 28px !important; font-size: 6.5px !important; }
 }
+
+/* Compact one-row product categories */
+.reference-collection { max-width: 1320px; padding-left: 14px; padding-right: 14px; }
+.reference-categories { width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; overflow: hidden; }
+.reference-categories button { min-width: 0; width: 100%; min-height: 54px; padding: 0 7px; border-radius: 13px; font-size: 12px; white-space: nowrap; }
+.reference-categories button span { overflow: hidden; text-overflow: ellipsis; }
+.reference-categories button small { font-size: 9px; }
+@media (max-width: 640px) {
+  .reference-collection { padding-left: 8px; padding-right: 8px; }
+  .reference-categories { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin-bottom: 14px; overflow: hidden; }
+  .reference-categories button { min-width: 0; min-height: 43px; padding: 0 2px; border-radius: 10px; font-size: 8px; letter-spacing: -.02em; }
+  .reference-categories button small { display: block; font-size: 7px; }
+}
