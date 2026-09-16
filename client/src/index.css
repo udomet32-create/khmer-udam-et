@@ -232,3 +232,19 @@ button { border: 0; cursor: pointer; }
 .category-icon { flex: 0 0 auto; color: #c3b8ff; filter: drop-shadow(0 2px 5px rgba(119,95,255,.35)); }
 .reference-categories button.active .category-icon { color: #172044; }
 @media (max-width: 640px) { .reference-categories button { gap: 2px; flex-wrap: wrap; align-content: center; }.category-icon { width: 13px; height: 13px; }.reference-categories button span { max-width: calc(100% - 17px); } }
+
+/* Bring product categories closer to contact/share and improve readability */
+.premium-connect-section { margin-bottom: 4px; }
+.reference-collection { padding-top: 8px; }
+.reference-categories { margin-top: 0; }
+.reference-categories button { font-size: 14px; min-height: 56px; gap: 6px; }
+.reference-categories button small { font-size: 10px; }
+.category-icon { width: 18px; height: 18px; }
+@media (max-width: 640px) {
+  .premium-connect-section { margin-bottom: 2px; }
+  .reference-collection { padding-top: 6px; }
+  .reference-categories { margin-bottom: 12px; }
+  .reference-categories button { min-height: 46px; font-size: 10px; gap: 3px; }
+  .reference-categories button small { font-size: 8px; }
+  .category-icon { width: 14px; height: 14px; }
+}
