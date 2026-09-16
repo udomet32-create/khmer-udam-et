@@ -258,3 +258,9 @@ button { border: 0; cursor: pointer; }
   .reference-search svg { width: 16px; height: 16px; }
   .reference-search input { font-size: 10px; }
 }
+
+/* Clear desktop/mobile video play control */
+.video-play-button { position: absolute; left: 50%; top: 50%; z-index: 3; display: grid; place-items: center; width: 70px; height: 70px; padding-left: 5px; color: #fff; border: 1px solid rgba(255,255,255,.65); border-radius: 50%; background: linear-gradient(135deg, rgba(91,72,205,.94), rgba(25,145,199,.94)); box-shadow: 0 10px 30px rgba(0,0,0,.4), 0 0 0 8px rgba(255,255,255,.12); transform: translate(-50%, -50%); cursor: pointer; transition: transform .16s ease, filter .16s ease; }
+.video-play-button:hover { filter: brightness(1.15); transform: translate(-50%, -50%) scale(1.06); }
+.video-play-button:active { transform: translate(-50%, -50%) scale(.96); }
+@media (max-width: 640px) { .video-play-button { width: 58px; height: 58px; }.video-play-button svg { width: 23px; height: 23px; } }
