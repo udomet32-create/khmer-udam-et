@@ -226,3 +226,9 @@ button { border: 0; cursor: pointer; }
   .reference-categories button { min-width: 0; min-height: 43px; padding: 0 2px; border-radius: 10px; font-size: 8px; letter-spacing: -.02em; }
   .reference-categories button small { display: block; font-size: 7px; }
 }
+
+/* Category icons */
+.reference-categories button { display: flex; align-items: center; justify-content: center; gap: 5px; }
+.category-icon { flex: 0 0 auto; color: #c3b8ff; filter: drop-shadow(0 2px 5px rgba(119,95,255,.35)); }
+.reference-categories button.active .category-icon { color: #172044; }
+@media (max-width: 640px) { .reference-categories button { gap: 2px; flex-wrap: wrap; align-content: center; }.category-icon { width: 13px; height: 13px; }.reference-categories button span { max-width: calc(100% - 17px); } }
