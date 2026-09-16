@@ -45,10 +45,10 @@ export const appRouter = router({
       return updateProduct(id, values);
     }),
     delete: adminProcedure.input(z.object({ id: z.number().int().positive() })).mutation(({ input }) => deleteProduct(input.id)),
-    uploadMedia: adminProcedure.input(z.object({ filename: z.string().min(1).max(180), mimeType: z.string().regex(/^(image|video)\//), dataBase64: z.string().min(1).max(35_000_000) })).mutation(async ({ input, ctx }) => {
+    uploadMedia: adminProcedure.input(z.object({ filename: z.string().min(1).max(180), mimeType: z.string().regex(/^(image|video)\//), dataBase64: z.string().min(1).max(1_400_000_000) })).mutation(async ({ input, ctx }) => {
       const rawName = input.filename.replace(/[^a-zA-Z0-9._-]/g, "-");
       const bytes = Buffer.from(input.dataBase64, "base64");
-      const limit = input.mimeType.startsWith("video/") ? 24 * 1024 * 1024 : 7 * 1024 * 1024;
+      const limit = input.mimeType.startsWith("video/") ? 1000 * 1024 * 1024 : 7 * 1024 * 1024;
       if (bytes.byteLength > limit) throw new Error(`File is too large. Maximum is ${Math.round(limit / 1024 / 1024)}MB.`);
       const uploaded = await storagePut(`products/${ctx.user.id}/${Date.now()}-${rawName}`, bytes, input.mimeType);
       return uploaded;

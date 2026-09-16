@@ -78,8 +78,8 @@ export default function AdminProducts() {
   const removeProduct = async (id: number) => { if (!window.confirm("តើអ្នកពិតជាចង់លុបផលិតផលនេះមែនទេ?")) return; await deleteMutation.mutateAsync({ id }); if (editingId === id) reset(); };
 
   const uploadMedia = async (file: File, kind: "image" | "video") => {
-    const max = kind === "video" ? 24 * 1024 * 1024 : 7 * 1024 * 1024;
-    if (file.size > max) { setMessage(`ឯកសារធំពេក។ ${kind === "video" ? "វីដេអូ" : "រូបភាព"} អាចមានទំហំអតិបរមា ${kind === "video" ? 24 : 7}MB។`); return; }
+    const max = kind === "video" ? 1000 * 1024 * 1024 : 7 * 1024 * 1024;
+    if (file.size > max) { setMessage(`ឯកសារធំពេក។ ${kind === "video" ? "វីដេអូ" : "រូបភាព"} អាចមានទំហំអតិបរមា ${kind === "video" ? 1000 : 7}MB។`); return; }
     setUploading(kind); setMessage("");
     try {
       const dataUrl = await new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(new Error("Cannot read file")); reader.readAsDataURL(file); });
