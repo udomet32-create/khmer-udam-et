@@ -248,3 +248,13 @@ button { border: 0; cursor: pointer; }
   .reference-categories button small { font-size: 8px; }
   .category-icon { width: 14px; height: 14px; }
 }
+
+/* Slim product search field */
+.reference-search { min-height: 44px; height: 44px; margin-bottom: 14px; padding: 7px 14px; }
+.reference-search svg { width: 18px; height: 18px; }
+.reference-search input { font-size: 12px; }
+@media (max-width: 640px) {
+  .reference-search { min-height: 40px; height: 40px; margin-bottom: 12px; padding: 5px 12px; }
+  .reference-search svg { width: 16px; height: 16px; }
+  .reference-search input { font-size: 10px; }
+}
