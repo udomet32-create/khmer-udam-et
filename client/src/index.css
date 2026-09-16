@@ -264,3 +264,8 @@ button { border: 0; cursor: pointer; }
 .video-play-button:hover { filter: brightness(1.15); transform: translate(-50%, -50%) scale(1.06); }
 .video-play-button:active { transform: translate(-50%, -50%) scale(.96); }
 @media (max-width: 640px) { .video-play-button { width: 58px; height: 58px; }.video-play-button svg { width: 23px; height: 23px; } }
+
+/* Keep product video visibly above the media overlay on desktop */
+.focus-main-media.video-playing video { position: relative; z-index: 1; display: block; visibility: visible; opacity: 1; color: #fff; }
+.focus-main-media.video-playing video::-webkit-media-controls { z-index: 4; }
+.focus-main-media.video-playing .video-play-button, .focus-main-media.video-playing .video-fullscreen-button { z-index: 5; }
